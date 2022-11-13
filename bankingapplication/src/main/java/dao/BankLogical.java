@@ -53,16 +53,18 @@ class UserNewLogin {
 //		}
 //		return con;
 //	}
+	
 	ConnectionDB con=new ConnectionDB();
 	// User Login  CASE 1  customer and admin
 	// customer CASE 1 and admin CASE 1
 	public String userLogin(Login login)throws UserDefinedException{
 	    CheckClass.checkNull(login.getPassCode());
 	    String role=null;
+	    String passcode=getEncryptedPasscode(login.getPassCode());
 		String lQuery="select role from login where (customerId=?) and (passcode=?)";
 		try(PreparedStatement pStatement=con.getPreparedStatement(lQuery)){
 			pStatement.setInt(1, login.getCustomerId());
-			pStatement.setString(2, login.getPassCode());
+			pStatement.setString(2, passcode);
 			try(ResultSet resultSet=pStatement.executeQuery()){
 				if(resultSet.getMetaData().getColumnCount()==0) {
 					return role;
@@ -79,7 +81,42 @@ class UserNewLogin {
 		}
 		return role;
 }
+
+	// passcode encryption
+			public String getEncryptedPasscode(String passCode)throws UserDefinedException{
+				try {
+					MessageDigest messageDigest=MessageDigest.getInstance("MD5");
+					messageDigest.update(passCode.getBytes());
+					byte[]bytes=messageDigest.digest();
+					StringBuilder sBuilder=new StringBuilder();
+					int length=bytes.length;
+					for(int i=0;i<length;i++) {
+						sBuilder.append(Integer.toString((bytes[i]&0xff)+0x100,16).substring(1));
+					}
+					return sBuilder.toString();
+				}
+				catch(NoSuchAlgorithmException ex) {
+					throw new UserDefinedException("Error Occur : ",ex);
+				}
+			}
+			
+	// get blocked status in account info
+	public String getAccountStatus(Long accountNumber)throws UserDefinedException{
+		String sQuery="select accountstatus from Accountinfo where AccountNumber="+accountNumber;
+		String status="";
+		try(PreparedStatement pStatement=con.getPreparedStatement(sQuery);ResultSet resultSet=pStatement.executeQuery()){
+			while(resultSet.next()) {
+				status=resultSet.getString("accountstatus");
+			}
+		}
+		catch(SQLException ex) {
+			throw new UserDefinedException("Error Occur : ",ex);
+		}
+		return status;
+	}
+
 	
+
 	// if user is customer just check the login credentials        
 	// Customer check login CASE 1
 	public boolean checkLogin(int customerId)throws UserDefinedException{
@@ -91,14 +128,16 @@ class UserNewLogin {
 				status=resultSet.getString("customerStatus");
 			}
 			System.out.println(status);
-			if(status=="Blocked") {
-				return flag;
+			if(status.equals("Blocked")) {
+				return false;
+			}
+			else {
+				return true;
 			}
 		}
 		catch(SQLException ex) {
 			throw new UserDefinedException("Error Occur : ",ex);
 		}
-		return true;
 	}
 }
 
@@ -106,9 +145,19 @@ public class BankLogical implements BankInterface{
 	
 	UserNewLogin user=new UserNewLogin();
 	ConnectionDB con=new ConnectionDB();
+	
+	
 	public String userLogin(Login login)throws UserDefinedException{
 	 return user.userLogin(login);
 	}
+	public boolean checkLogin(int customerId)throws UserDefinedException{
+		return user.checkLogin(customerId);
+	}
+	public String getAccountStatus(Long accountNumber)throws UserDefinedException{
+		return user.getAccountStatus(accountNumber);
+	}
+	
+	
 // EX 1
 	// get user activity status  CASE 1  Customer
 	public void userActivityStatus(int customerId,boolean flag)throws UserDefinedException {
@@ -607,10 +656,10 @@ public class BankLogical implements BankInterface{
 		public void deactiveAccount(int customerId,long accountNumber,boolean flag)throws UserDefinedException{
 			String sQuery="";
 			if(flag) {
-			      sQuery="update Accountinfo set accountstatus='Active' where (AccountNumber="+accountNumber+") and (customerId="+customerId+")";
+			      sQuery="update Accountinfo set accountstatus='active' where (AccountNumber="+accountNumber+") and (customerId="+customerId+")";
 			}
 			else {
-				sQuery="update Accountinfo set accountstatus='InActive' where (AccountNumber="+accountNumber+") and (customerId="+customerId+")";
+				sQuery="update Accountinfo set accountstatus='inactive' where (AccountNumber="+accountNumber+") and (customerId="+customerId+")";
 			}
 			try(PreparedStatement pStatement=con.getPreparedStatement(sQuery)){
 				pStatement.executeUpdate();
@@ -699,7 +748,7 @@ public class BankLogical implements BankInterface{
 // EX 19
 		// update accountinfo status blocked   CASE 13 admin
 		public boolean blockAccount(int customerId,long accountNumber)throws UserDefinedException{
-			String bQuery="update Accountinfo set accountstatus='Blocked' where (customerId=?) and (AccountNumber=?)";
+			String bQuery="update Accountinfo set accountstatus='blocked' where (customerId=?) and (AccountNumber=?)";
 			try(PreparedStatement pStatement=con.getPreparedStatement(bQuery)){
 				pStatement.setInt(1, customerId);
 				pStatement.setLong(2, accountNumber);
@@ -810,8 +859,14 @@ public class BankLogical implements BankInterface{
 		
 // EX 25
 		// update customer status blocked   CASE 15 admin
-				public boolean blockCustomer(int customerId)throws UserDefinedException{
-					String bQuery="update Customerinfo set CustomerStatus='Blocked' where customerId=?";
+				public boolean blockCustomer(int customerId,boolean flag)throws UserDefinedException{
+					String bQuery;
+					if(flag) {
+					bQuery="update Customerinfo set CustomerStatus='Blocked' where customerId=?";
+					}
+					else {
+						bQuery="update Customerinfo set CustomerStatus='active' where customerId=?";
+					}
 					try(PreparedStatement pStatement=con.getPreparedStatement(bQuery)){
 						pStatement.setInt(1, customerId);
 						if(pStatement.executeUpdate()==1) {

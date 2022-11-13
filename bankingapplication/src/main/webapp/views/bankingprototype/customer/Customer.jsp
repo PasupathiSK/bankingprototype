@@ -9,34 +9,99 @@
 <head>
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
  <title>Customer Page</title>
+ <!-- CSS only 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+ <link rel="stylesheet" href="../asserts/css/bootstrap.min.css">  -->
  <style>
-#customers {
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 50%;
+
+* {
+    /* Change your font family */
+    font-family: sans-serif;
 }
 
-#customers td, #customers th {
-  border: 1px solid #ddd;
-  padding: 8px;
+.content-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    min-width: 400px;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 50);
+    width:95%;
 }
 
-#customers tr:nth-child(even){background-color:Beige;}
+.content-table thead tr {
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
 
-#customers tr:hover {background-color: #ddd;}
+.content-table th,
+.content-table td {
+font-size:15px;
+    padding: 12px 15px;
+}
+.content-table th{
+background-color:#007BFF;
+color:white;
+}
 
-#customers th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #04AA6D;
-  color: white;
+.content-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.content-table tbody tr:nth-of-type(even) {
+    background-color:#F0FFFF;
+}
+.content-table tbody tr:nth-of-type(odd) {
+    background-color:#DCDCDC;
+}
+
+.content-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.content-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+.content-table tbody tr:hover {background-color:#778899;}
+body{
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 10px;
+  background: white;
+  linear-gradient(#141e30, #243b55);
+  linear-gradient(115deg, #56d8e4 10%, #9f01ea 90%);
 }
 </style>
+<!-- css bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/asserts/css/bootstrap.min.css">
+<!-- end -->
+
+<!-- script -->
+
+	<script src="../asserts/js/jquery.min.js"></script>
+	<script src="../asserts/js/bootstrap.min.js"></script>
+<!-- end -->
 </head>
 <body>
-		<div style="text:align:center;" >
-		<table id="customers">
+<!-- 
+<script src="../asserts/js/jquery.min.js"></script>
+		<script src="../asserts/js/bootstrap.min.js"></script>
+		-->
+		
+	
+				
+				<%BankInterface bInterface=new BankLogical(); 
+				HttpSession httpSession=request.getSession();
+				List<Account>list=(List<Account>)httpSession.getAttribute("userId");
+				String name=(String)httpSession.getAttribute("name");%>
+					<h1 style="color:#DB4437;text-transform:uppercase;">WELCOME <%=name %></h1>
+		<div class="container"> 
+		<table class="content-table" border="1">
 			<tr>
 				<th>AccountNumber</th>
 				<th>Branch</th>
@@ -45,11 +110,9 @@
 				<th>AccountStatus</th>
 				<th>Ifsc</th>
 			</tr>
-				<%BankInterface bInterface=new BankLogical(); 
-				HttpSession httpSession=request.getSession();
-				List<Account>list=(List<Account>)httpSession.getAttribute("userId");%>
+				
 				<%for(Account account:list){%>
-				<tr>
+				<tr class="active-now" style="color: black;">
 				<td><%=account.getAccountNumber()%></td>
 				<td><%=account.getBranch() %></td>
 				<td><%=account.getAccountType() %></td>

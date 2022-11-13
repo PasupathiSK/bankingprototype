@@ -17,7 +17,22 @@ import model.Transaction;
 import model.User;
 
 public interface BankInterface {
+	
+	public String getAccountStatus(Long accountNumber)throws UserDefinedException;
+	/**
+	 * 
+	 * @param customerId
+	 * @return
+	 * @throws UserDefinedException
+	 */
 
+	public boolean checkLogin(int customerId)throws UserDefinedException;
+	/**
+	 * 
+	 * @param login
+	 * @return
+	 * @throws UserDefinedException
+	 */
 	public String userLogin(Login login)throws UserDefinedException;
 	
 	/**
@@ -216,7 +231,7 @@ public interface BankInterface {
 	 * @return
 	 * @throws UserDefinedException
 	 */
-	public boolean blockCustomer(int customerId)throws UserDefinedException;//swami - resolved
+	public boolean blockCustomer(int customerId,boolean flag)throws UserDefinedException;//swami - resolved
 	
 // Get Login info
 	/**

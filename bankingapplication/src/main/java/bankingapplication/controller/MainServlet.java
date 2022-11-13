@@ -33,9 +33,9 @@ public class MainServlet extends HttpServlet {
      RequestDispatcher requestDispatcher;
     static int id;
     static String passCode;
-    static String nCustomerId;
-    static String nAccountNumber;
-    static String nStatus;
+//    static String nCustomerId;
+//    static String nAccountNumber;
+//    static String nStatus;
     static boolean flag=false;
     /**
      * @see HttpServlet#HttpServlet()
@@ -358,23 +358,25 @@ private void transactionLimitAdminPage(HttpServletRequest request, HttpServletRe
 	}
 
 // Withdraw Approve Process
-	static String wCustomerId;
-	static String wAccountNumber;
-	static String wAmount;
-	static boolean checkFlag=false;
+//	static String wCustomerId;
+//	static String wAccountNumber;
+//	static String wAmount;
+//	static boolean checkFlag=false;
 private void withdrawApproveProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, UserDefinedException {		
-	if(!checkFlag) {
-				wCustomerId=request.getParameter("customerId");
-			wAccountNumber=request.getParameter("accountNumber");
-			wAmount=request.getParameter("amount");
-			checkFlag=true;
-			}
-	System.out.println(checkFlag);
-			System.out.println(wCustomerId+" "+wAccountNumber+" "+wAmount);
-			if(checkFlag) {
-				requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/WithdrawApprove.jsp");
-				requestDispatcher.forward(request, response);
+//	if(!checkFlag) {
+			String	wCustomerId=request.getParameter("customerId");
+		String wAccountNumber=request.getParameter("accountNumber");
+			String wAmount=request.getParameter("amount");
 			String status=request.getParameter("status");
+//			checkFlag=true;
+//			}
+//	System.out.println(checkFlag);
+			System.out.println(wCustomerId+" "+wAccountNumber+" "+wAmount);
+			System.out.println(status);
+//			if(status.equals("approved")) {
+//				requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/WithdrawApprove.jsp");
+//				requestDispatcher.forward(request, response);
+//			String status=request.getParameter("status");
 			System.out.println(wCustomerId+" "+wAccountNumber+" "+wAmount+" "+status);
 			Request rRequest=new Request();
 			System.out.println("1 here");
@@ -388,12 +390,13 @@ private void withdrawApproveProcess(HttpServletRequest request, HttpServletRespo
 				System.out.println("3 here");
 				if(bInterface.updateWithdrawApprove(rRequest, true)) {
 					System.out.println("Withdraw Successfully : ");
-					checkFlag=false;
-					requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/Admin.jsp");
-					requestDispatcher.forward(request, response);
+//					checkFlag=false;
+//					requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/AdminHome.jsp");
+//					requestDispatcher.forward(request, response);
+				adminHomePage(request,response);
 				}
 				else {
-					checkFlag=false;
+//					checkFlag=false;
 					System.out.println("check");
 				}
 			}
@@ -401,23 +404,34 @@ private void withdrawApproveProcess(HttpServletRequest request, HttpServletRespo
 				System.out.println("4 here");
 				if(bInterface.updateWithdrawApprove(rRequest, false)) {
 					System.out.println("Withdraw Rejected Successfully : ");
-					requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/Admin.jsp");
-					requestDispatcher.forward(request, response);
-					checkFlag=false;
+//					requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/AdminHome.jsp");
+//					requestDispatcher.forward(request, response);
+//					adminHomePage(request,response);
+					adminHomePage(request,response);
+
+//					checkFlag=false;
+				}
+				else {
+//					checkFlag=false;
+					adminHomePage(request,response);
+
+					System.out.println("check");
 				}
 			}
 			}
-			}
+}
+			
 //			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/AdminHome.jsp");
 //			requestDispatcher.forward(request, response);
-	}
 
 // Block Customer Process 
 	
 private void blockCustomerProcess(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, UserDefinedException, ServletException, IOException {
 		String customerId=request.getParameter("customerId");
+		String choice=request.getParameter("choice");
 		System.out.println(customerId);
-		if(bInterface.blockCustomer(Integer.parseInt(customerId))) {
+		if(choice.equals("block")) {
+		if(bInterface.blockCustomer(Integer.parseInt(customerId),true)) {
 			System.out.println("Blocked Customer Successfully : ");
 			request.setAttribute("blockCustomer","Blocked Successfully");
 			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/BlockCustomerByCustomerId.jsp");
@@ -427,6 +441,20 @@ private void blockCustomerProcess(HttpServletRequest request, HttpServletRespons
 			request.setAttribute("blockCustomer","Not Valid Customer Id");
 			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/BlockCustomerByCustomerId.jsp");
 			requestDispatcher.forward(request, response);
+		}
+		}
+		else {
+			if(bInterface.blockCustomer(Integer.parseInt(customerId),false)) {
+				System.out.println("Activate Customer Successfully : ");
+				request.setAttribute("blockCustomer","Activate Successfully");
+				requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/BlockCustomerByCustomerId.jsp");
+				requestDispatcher.forward(request, response);
+			}
+			else {
+				request.setAttribute("blockCustomer","Not Valid Customer Id");
+				requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/BlockCustomerByCustomerId.jsp");
+				requestDispatcher.forward(request, response);
+			}
 		}
 	}
 
@@ -459,43 +487,68 @@ private void blockAccountProcess(HttpServletRequest request, HttpServletResponse
 // Update Account Status
 	
 private void updateAccountStatus(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, NumberFormatException, UserDefinedException {
-	if(!flag) {
-    nCustomerId=request.getParameter("customerId");
-   nAccountNumber=request.getParameter("accountNumber");
-	nStatus=request.getParameter("status");
-	flag=true;
-	}
-	System.out.println(nCustomerId+" "+nAccountNumber+" "+nStatus);
-	if(nStatus.equals("accept")) {
-		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/UpdateAccountStatus.jsp");
-		requestDispatcher.forward(request, response);
-		String decision=request.getParameter("decision");
-		System.out.println(nCustomerId+" "+nAccountNumber+" "+nStatus+" "+decision);
+//	if(!flag) {
+   String  nCustomerId=request.getParameter("customerId");
+   String nAccountNumber=request.getParameter("accountNumber");
+//	String nStatus=request.getParameter("status");
+//	flag=true;
+//	}
+	System.out.println(nCustomerId+" "+nAccountNumber+" ");
+//	if(nStatus.equals("accept")) {
+//		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/UpdateAccountStatus.jsp");
+//		requestDispatcher.forward(request, response);
+		String decision=request.getParameter("status");
+		System.out.println(nCustomerId+" "+nAccountNumber+" "+" "+decision);
 	if(decision!=null) {
 		if(decision.equals("active")) {
 			bInterface.deactiveAccount(Integer.parseInt(nCustomerId), Long.parseLong(nAccountNumber), true);
-			System.out.println("Updated Successfully : ");
+			System.out.println("Active 1 Updated Successfully : ");
+			if(bInterface.updateAccountStatus(Integer.parseInt(nCustomerId),Long.parseLong(nAccountNumber), true)) {
+				System.out.println(" acepted 2Updated Successfully : ");
+				adminHomePage(request,response);
+//			}
 			}
+			adminHomePage(request,response);
+		}
 		else {
 			bInterface.deactiveAccount(Integer.parseInt(nCustomerId),Long.parseLong(nAccountNumber), false);
-			System.out.println("updated Successfully : ");
+			System.out.println("Deactive 1 updated Successfully : ");
+			if(bInterface.updateAccountStatus(Integer.parseInt(nCustomerId),Long.parseLong(nAccountNumber),false)) {
+				System.out.println("rejected 1 Updated Successfully : ");
+				adminHomePage(request,response);
+//			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/ActiveAndDeactive.jsp");
+//			requestDispatcher.forward(request, response);
 		}
-		if(bInterface.updateAccountStatus(Integer.parseInt(nCustomerId),Long.parseLong(nAccountNumber), true)) {
-			System.out.println("Updated Successfully : ");
+			else {
+				System.out.println("check");
+				adminHomePage(request,response);
+			}
 		}
-		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/ActiveAndDeactive.jsp");
-		requestDispatcher.forward(request, response);
-		flag=false;
+//		if(bInterface.updateAccountStatus(Integer.parseInt(nCustomerId),Long.parseLong(nAccountNumber), true)) {
+//			System.out.println(" active 2Updated Successfully : ");
+//			adminHomePage(request,response);
+////		}
+//		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/ActiveAndDeactive.jsp");
+//		requestDispatcher.forward(request, response);
+//		flag=false;
 	}
+
+	
+//	else {
+//		if(bInterface.updateAccountStatus(Integer.parseInt(nCustomerId),Long.parseLong(nAccountNumber),false)) {
+//			System.out.println("deactivate 1 Updated Successfully : ");
+//			adminHomePage(request,response);
+////		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/ActiveAndDeactive.jsp");
+////		requestDispatcher.forward(request, response);
+//	}
+//		else {
+//			System.out.println("check");
+//			adminHomePage(request,response);
+//		}
+//	}
 	}
-	else {
-		if(bInterface.updateAccountStatus(Integer.parseInt(nCustomerId),Long.parseLong(nAccountNumber),false)) {
-			System.out.println("Updated Successfully : ");
-		}
-		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/admin/ActiveAndDeactive.jsp");
-		requestDispatcher.forward(request, response);
-	}
-	}
+
+
 
 // Insert In User Process
 	
@@ -572,6 +625,7 @@ private void updatePasscodeProcess(HttpServletRequest request, HttpServletRespon
 		Login login=new Login();
 		login.setCustomerId(id);
 		login.setPassCode(confirmPasscode);
+		System.out.println(passCode+" "+oldPasscode+" "+newPasscode+" "+confirmPasscode);
 		if(oldPasscode.equals(passCode)&&newPasscode.equals(confirmPasscode)) {
 				bInterface.updatePasscodeInLogin(login);
 					System.out.println("Update Successfully : ");
@@ -596,9 +650,12 @@ private void setRequestAccountStatusProcess(HttpServletRequest request, HttpServ
 		System.out.println(id);
 		if(bInterface.setRequestForAccountStatus(id, Long.parseLong(accountNumber), description)) {
 			System.out.println("Requested Successfully : ");
+			request.setAttribute("requestSucessufully", "Requested Successfully");
+
+			setRequestAccountStatus(request,response);
+//		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/SetRequestAccountStatus.jsp");
+//		requestDispatcher.forward(request, response);
 		}
-		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/SetRequestAccountStatus.jsp");
-		requestDispatcher.forward(request, response);
 	}
 
 // Transfer Process
@@ -613,23 +670,35 @@ private void transferProcess(HttpServletRequest request, HttpServletResponse res
 		transaction.setReceivedAccountFrom(Long.parseLong(toAccountNumber));
 		transaction.setAmount(Long.parseLong(amount));
 		transaction.setModeOfTransaction("transfer");
+		if(bInterface.getAccountInfoAccountStatus(Long.parseLong(fromAccountNumber))) {
 		try {
 		if(bInterface.makeTransaction(transaction)&&Long.parseLong(fromAccountNumber)!=Long.parseLong(toAccountNumber)) {
 			System.out.println("Transaction Successfully : ");
 			request.setAttribute("transaction","Transfer Successfully");
-		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/Transfer.jsp");
-		requestDispatcher.forward(request, response);
+			   transferPage(request,response);
+
+//		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/Transfer.jsp");
+//		requestDispatcher.forward(request, response);
 		}
 		else {
 			request.setAttribute("transaction","Something Wrong");
-			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/Transfer.jsp");
-			requestDispatcher.forward(request, response);
+			   transferPage(request,response);
+
+//			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/Transfer.jsp");
+//			requestDispatcher.forward(request, response);
 		}
 		}
 		catch(UserDefinedException ex) {
 			request.setAttribute("transaction",ex.getMessage());
-			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/Transfer.jsp");
-			requestDispatcher.forward(request, response);
+			   transferPage(request,response);
+
+//			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/Transfer.jsp");
+//			requestDispatcher.forward(request, response);
+		}
+		}
+		else {
+			request.setAttribute("transaction","Account is Inactive : Try to contact Admin");
+			   transferPage(request,response);
 		}
 	}
 
@@ -640,8 +709,10 @@ private void depositProcess(HttpServletRequest request, HttpServletResponse resp
 		String amount=request.getParameter("amount");
 		System.out.println(accountNumber+" "+amount);
 //		try {
+		if(!bInterface.getAccountStatus(Long.parseLong(accountNumber)).equals("blocked")) {
 			if(bInterface.depositMoney(Long.parseLong(amount),Long.parseLong(accountNumber))) {
 				System.out.println("Updated Successfully : ");
+				request.setAttribute("withdrawMessage","Deposited Successfully");
 				requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/Deposit.jsp");
 				requestDispatcher.forward(request, response);
 			}
@@ -651,28 +722,45 @@ private void depositProcess(HttpServletRequest request, HttpServletResponse resp
 			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/Deposit.jsp");
 			requestDispatcher.forward(request, response);
 		}
+		}
+		else {
+			request.setAttribute("withdrawMessage","This Account Is Blocked : Not Valid For Transaction");
+			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/Deposit.jsp");
+			requestDispatcher.forward(request, response);
+		}
 //		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/Deposit.jsp");
 //		requestDispatcher.forward(request, response);
 	}
 
 // Set Withdraw Request
 	
-private void withdrawRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+private void withdrawRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, NumberFormatException, UserDefinedException {
 		String accountNumber=request.getParameter("accountNumber");
 		String amount=request.getParameter("amount");
 		System.out.println(accountNumber+" "+amount+" "+id);
+		if(bInterface.getAccountInfoAccountStatus(Long.parseLong(accountNumber))) {
 		try {
 			if(bInterface.setWithdrawRequest(id, Long.parseLong(accountNumber), Long.parseLong(amount))){
 				System.out.println("Requested Successfully : ");
+//				withdrawRequestPage(request,response);
+				request.setAttribute("withdrawMessage","Requested Sucessfully");
 				withdrawRequestPage(request,response);
 //				requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/WithdrawRequest.jsp");
 //				requestDispatcher.forward(request, response);
 			}
 		} catch (NumberFormatException | UserDefinedException e) {
-//			request.setAttribute("withdrawMessage","Incorrect Details");
+			request.setAttribute("withdrawMessage","Incorrect Details");
+			withdrawRequestPage(request,response);
 //			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/WithdrawRequest.jsp");
 //			requestDispatcher.forward(request, response);
 			e.printStackTrace();
+		}
+		}
+		else {
+			request.setAttribute("withdrawMessage","Account is Inactive : Try to contact Admin");
+			withdrawRequestPage(request,response);
+//			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/WithdrawRequest.jsp");
+//			requestDispatcher.forward(request, response);
 		}
 //		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/WithdrawRequest.jsp");
 //		requestDispatcher.forward(request, response);
@@ -723,6 +811,7 @@ private void editUserInfoProcess(HttpServletRequest request, HttpServletResponse
 		try {
 			if(bInterface.updateUserInfo(user)) {
 			System.out.println("updated successfully : ");
+			request.setAttribute("editUserInfoMessage","Updated Sucessfully");
 			myDetailsHome(request,response);
 //			request.getRequestDispatcher("views/bankingprototype/customer/Customerinfo.jsp").forward(request, response);
 			}
@@ -861,6 +950,8 @@ private void transactionDetailsPage(HttpServletRequest request, HttpServletRespo
 	    List<Transaction>list=bInterface.getLastNTransactionInfo(Long.parseLong(accountNumber),Integer.parseInt(days));
 	 //   HttpSession httpSession=request.getSession();
 	 //   httpSession.setAttribute("transactionList",list);
+		if(bInterface.getAccountInfoAccountStatus(Long.parseLong(accountNumber))) {
+
 	    if(!list.isEmpty()) {
 	    request.setAttribute("transactionList",list);
 		requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/TransactionDetails.jsp");
@@ -871,6 +962,11 @@ private void transactionDetailsPage(HttpServletRequest request, HttpServletRespo
 			requestDispatcher=request.getRequestDispatcher("views/bankingprototype/customer/TransactionDetails.jsp");
 			requestDispatcher.forward(request,response);
 	    }
+		}
+		else {
+			request.setAttribute("errorMessage","Account is Inactive: Try to contact Admin");
+			transactionLimitPage(request,response);
+		}
 	}
 
 // Transaction Limit Page
@@ -972,12 +1068,14 @@ private void transactionHome(HttpServletRequest request, HttpServletResponse res
 		String passcode=request.getParameter("passcode");
 		Login login=new Login();
 		id=Integer.parseInt(customerId);
+		User user=bInterface.getUserInfo(id);
+		request.setAttribute("userInfo",user);
 		passCode=passcode;
 		System.out.println(" "+id);
 		login.setCustomerId(Integer.parseInt(customerId));
 		login.setPassCode(passcode);
 		
-		
+		if(bInterface.checkLogin(Integer.parseInt(customerId))) {
 			bInterface.userLogin(login);
 		String status=null;
 			System.out.println(customerId+" "+passcode);
@@ -993,6 +1091,7 @@ private void transactionHome(HttpServletRequest request, HttpServletResponse res
 			List<Account>list=bInterface.getCustomerIdToGetAllAccountInfo(Integer.parseInt(customerId));
 			HttpSession httpSession=request.getSession();
 		httpSession.setAttribute("userId",list);
+		httpSession.setAttribute("name",user.getName());
 		requestDispatcher=request.getRequestDispatcher("/views/bankingprototype/customer/CustomerHome.jsp");
 //	try {
 //			showCustomerAccountInfo(request,response,customerId);
@@ -1014,13 +1113,19 @@ private void transactionHome(HttpServletRequest request, HttpServletResponse res
 //			requestDispatcher.forward(request, response);
 //		}
 		
-		else {
+		if(status==null){
 //		catch(ServletException|IOException|UserDefinedException|NullPointerException ex)  
 			System.out.println("check 1");
 			request.setAttribute("message","Incorrect Details");
 			request.getRequestDispatcher("views/bankingprototype/login/login.jsp").forward(request, response);
 //		}
 		}
+		}
+		else {
+			System.out.println("Blocked");
+			request.setAttribute("message","Login Blocked");
+			request.getRequestDispatcher("views/bankingprototype/login/login.jsp").forward(request, response);
+			}
 		
 	}
 

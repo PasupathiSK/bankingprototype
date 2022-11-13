@@ -8,88 +8,122 @@
 <html>
 <head>
 <style>
-#customers {
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 50%;
+
+* {
+    /* Change your font family */
+    font-family: sans-serif;
 }
 
-#customers td, #customers th {
-  border: 1px solid #ddd;
-  padding: 8px;
+.content-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    min-width: 400px;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 50);
+    width:95%;
 }
 
-#customers tr:nth-child(even){background-color:Beige;}
-
-#customers tr:hover {background-color: #ddd;}
-
-#customers th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #04AA6D;
-  color: white;
-}
-fLabel{
-width:100px;
-display:inline-block;
-}
-input[type=number], select {
-  width: 30%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+.content-table thead tr {
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
 }
 
-input[type=submit] {
-  width: 10%;
-  background-color: #4CAF50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.content-table th,
+.content-table td {
+font-size:15px;
+    padding: 12px 15px;
+}
+.content-table th{
+background-color:#007BFF;
+color:white;
 }
 
-input[type=submit]:hover {
-  background-color: #45a049;
+.content-table tbody tr {
+    border-bottom: 1px solid #dddddd;
 }
 
-div {
-  border-radius: 5px;
-  background-color: #f2f2f2;
-  padding: 20px;
+.content-table tbody tr:nth-of-type(even) {
+    background-color:#F0FFFF;
 }
+.content-table tbody tr:nth-of-type(odd) {
+    background-color:#DCDCDC;
+}
+
+.content-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.content-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+.content-table tbody tr:hover {background-color:#778899;}
+body{
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 10px;
+  background: white;
+  linear-gradient(#141e30, #243b55);
+  linear-gradient(115deg, #56d8e4 10%, #9f01ea 90%);
+}
+
+
+
+
+
+////
+
+
 </style>
 <meta charset="UTF-8">
 <title>User Customer Info By Id</title>
+</style>
+<!-- css bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/asserts/css/bootstrap.min.css">
+<!-- end -->
+
+<!-- script -->
+
+	<script src="../asserts/js/jquery.min.js"></script>
+	<script src="../asserts/js/bootstrap.min.js"></script>
+<!-- end -->
 </head>
 <body>
-	<h1>User Info</h1>
 	<!-- 	<form action="MyDetailsHome" method="post" target="admin">  -->
+	 <div class="container">
+		<h1 style="font-size:30px;color:#DB4437;">User Info</h1>
+	
 	<form action="<%=request.getContextPath() %>/customerInfoProcess">
-		<div>
-			User Id :<input type="number" name="customerId" />
-		</div>
+	
+			<flable><b style="font-size:20px;">User Id</b>
+			</flable>
+			<div>
+			<input type="number" name="customerId" style="border-top: 1px solid #fff;border-left: 1px solid #fff;border-right: 1px solid #fff;" required/>
+			</div>
 		<p style="color:red">${userCustomerInfo }</p>
-		<div>
-		<input type="submit" value="find">
+	
+	
+		<div class="container pt-5">
+		<input type="submit" value="find" class="btn btn-success" style="font-size:25px;">
 		</div>
 		</form>
+		</div>
+		<div class="container">
 		<form action="<%=request.getContextPath() %>/UserInfoByIdPage">
-		<div>
-		<input type="submit" value="show all">
+		<div class="container pt-5">
+		<input type="submit" value="show all" class="btn btn-success" style="font-size:25px;">
 		</div>
 		<div>
 			<%HttpSession httpSession=request.getSession();
 			List<User>listUser=(List<User>)httpSession.getAttribute("listUser");
 			List<Customer>listCustomer=(List<Customer>)httpSession.getAttribute("listCustomer");
 			%>
-			<table id="customers">
+			<table class="content-table">
 				<tr>
 					<th>CustomerId</th>
 					<th>Name</th>
@@ -128,5 +162,7 @@ div {
 			</table>
 		</div>
 	</form>
+	</div>
+	
 </body>
 </html>

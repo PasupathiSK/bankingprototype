@@ -1,113 +1,212 @@
-<!DOCTYPE jsp>
-<jsp>
+<!DOCTYPE html>
+<html>
 <head>
 <meta charset="UTF-8">
 <style>
-.flex-container {
-  display: flex;
-  height:100px;
-  background-color: DodgerBlue;
-}
-.height {
-  height: 100px;
-  width: 100px;
-  background-color: powderblue;
-}
-input[type=submit] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 0px 0;
-  box-sizing: border-box;
-  border-color:yellow;
-  background-color: #3CBC8D;
-  color: white;
-}
-
-
+<!--
 .dropbtn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
+	background-color: transparent;
+	
+	padding: 22px 15px;
+	margin: 0px 0;
+	font-size: 30px;
+	border:white;
+	
+	cursor: pointer;
+	color:white;
 }
 
 .dropdown {
-  position: relative;
-  display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 
 .dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+	display: none;
+	position: absolute;
+	background:linear-gradient(#007BFF, #007BFF);
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	padding: 20px 92px;
+	z-index: 1;
+	color: white;
 }
 
 .dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
+	color: white;
+	display: block;
 }
 
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content a:hover {
+	background-color:#243b55;
+}
 
 .dropdown:hover .dropdown-content {
-  display: block;
+	background-color: #243b55;
+	display: block;
 }
 
 .dropdown:hover .dropbtn {
-  background-color: #3e8e41;
+	background-color: none;
+}
+
+body {
+	margin: 0;
+}
+
+/* Style the header */
+.header {
+	background: linear-gradient(#141e30, #243b55);
+	padding: 100px;
+	text-align: center;
+}
+
+
+
+
+
+////
+body {
+	margin: 0;
+}
+
+ul.topnav {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background:#243b55;
+	height: 100vh;
+	
+}
+
+ul.topnav li {
+margin:0px;
+	float: left;
+}
+
+ul.topnav li a {
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+ul.topnav li :hover {
+	background-color:#6c757d!important;
+}
+
+ul.topnav li a.active {
+	background-color: white;
+}
+
+ul.topnav li.right {
+	float: right;
+}
+
+@media screen and (max-width: 600px) {
+	ul.topnav li.right, ul.topnav li {
+		float: none;
+	}
+}
+.bgnone{
+background:none;
+border:none;
+color:white;
+}
+.drpcnt{
+width: 100%; border: none; font-size: 20px; background: none; color: white;
+}
+space{
+padding:0px 10px;
 }
 </style>
+
+
+<!-- css bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/asserts/css/bootstrap.min.css">
+<!-- end -->
+
+<!-- script -->
+
+	<script src="../asserts/js/jquery.min.js"></script>
+	<script src="../asserts/js/bootstrap.min.js"></script>
+<!-- end -->
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+
+<!-- end -->
 <title>Admin Menu</title>
 </head>
-<body class="flex-container">
-		<menu>
-			<div class="flex-container" style="position:fixed;left:40px;">
-				<form action="../../../UserInfoByIdPage" method="post" target="admin">
-					<input type="submit" value="User Info"/>
+<body>
+	<ul class="topnav">
+		<li>
+			<form action="<%=request.getContextPath()%>/AdminHomePage"
+				method="post" target="_parent">
+				<i class='fas fa-home' style='color:white;'><input type="submit" value="Home" class="dropbtn" /></i>
+			</form>
+		</li>
+		<li>
+			<form action="<%=request.getContextPath()%>/UserInfoByIdPage"
+				method="post" target="admin">
+				<i class='fas fa-users' style="color:white;"><input type="submit" value="User Info" class="dropbtn" /></i>
+			</form>
+		</li>
+		<li>
+			<form
+				action="<%=request.getContextPath()%>/TransactionDetailsByIdPage"
+				method="post" target="admin">
+				<i class='fas fa-receipt drpcnt' style="color:white;"><input type="submit" value="Statement" class="dropbtn" /></i>
+			</form>
+		</li>
+		<li>
+			<form action="<%=request.getContextPath()%>/AllAccountInfoPage"
+				method="post" target="admin">
+				<i class='far fa-address-book' style="color:white;"><input type="submit" value="Account Info" class="dropbtn" /></i>
+			</form>
+		</li>
+	<!-- 	<li>
+
+
+			<form action="<%=request.getContextPath()%>/ActiveAndDeactivePage"
+				method="post" target="admin">
+				<input type="submit" value="Account Status" class="dropbtn" />
+			</form>
+		</li>-->
+		<li>
+
+			<form action="<%=request.getContextPath()%>/BlockAccountPage"
+				method="post" target="admin">
+				 <i class='fas fa-exclamation-triangle' style="color:white;"><input type="submit" value="Block Account" class="dropbtn" /></i>
+			</form>
+		</li>
+		<li>
+			<form
+				action="<%=request.getContextPath()%>/BlockCustomerByCustomerIdPage"
+				method="post" target="admin">
+				<i class='fas fa-user-lock' style="color:white;"><input type="submit" value="Bolck Customer" class="dropbtn" /></i>
+			</form>
+		</li>
+		<li>
+	<div class="dropdown">
+				<button class="dropbtn"><i class='fas fa-user-plus' style="color:white;">AddUser</i></button>
+				<div class="dropdown-content" style="overflow: visible;">
+					   
+				</form>
+					<form action="<%=request.getContextPath() %>/InsertInAccountPage"
+						method="post" target="admin">
+						<i class='fas fa-landmark' style="color:white;"><input type="submit" value="Add Account"  style="width: 100%; border: none; font-size: 25px; background: none; color: white;"></i>
 					</form>
-                <form action="../../../TransactionDetailsByIdPage" method="post" target="admin">
-				<input type="submit" value="Statement" />
-				</form>
-
-                <form action="../../../AllAccountInfoPage" method="post" target="admin">
-				<input type="submit" value="Account Info" />
-				</form>
-
-
-               <form action="../../../ActiveAndDeactivePage" method="post" target="admin">
-				<input type="submit" value="Account Status" />
-				</form>
-
-               <form action="../../../BlockAccountPage" method="post" target="admin">
-				<input type="submit" value="Block Account" />
-				</form>
-
-                <form action="../../../BlockCustomerByCustomerIdPage" method="post" target="admin">
-				<input type="submit" value="Bolck Customer" />
-				</form>
-<div class="dropdown">
-          <!--      <form action="../../../InsertHomePage" method="post" target="admin">
-				<input type="submit" value="Add User" />
-				<a href="jsdflk.html">fjksjkf</a>
-				</form>-->
-  <button class="dropbtn">Dropdown</button>
-  <div class="dropdown-content">
-  <a href="#">Link 1</a>
-  <a href="#">Link 2</a>
-  <a href="#">Link 3</a>
-</div>
+					<form action="<%=request.getContextPath() %>/InsertInUserPage"
+						method="post" target="admin">
+						<i class='fas fa-user-alt' style="color:white;"><input type="submit" value="Add User"  style="width: 100%; border: none; font-size: 25px; background: none; color: white;"></i>
+					</form>
 				</div>
 			</div>
-		</menu>
-		<iframe src="views/bankingprototype/admin/Admin.jsp" name="admin" height="100%" width="100%" style="position:fixed;top:130px"></iframe>
-		
-		<iframe src="views/bankingprototype/admin/AdminMenu.jsp" name="menu" height="20px" width="60%" style="position:absolute;left:20px;"></iframe>
+			</li>
+
+	</ul>
 </body>
-</jsp>
+</html>
